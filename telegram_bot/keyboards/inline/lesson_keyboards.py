@@ -89,7 +89,7 @@ async def get_under_test_keyboard(lesson_id):
 	        InlineKeyboardButton(
 	        	text="<<<", 
 	        	callback_data=lesson_callback.new(
-	        		action="get_lesson",
+	        		action="back_to_lesson",
 	        		item_id=lesson_id
 	        	)
 	        ),

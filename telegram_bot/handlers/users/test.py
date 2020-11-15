@@ -15,9 +15,12 @@ async def send_test(call: CallbackQuery, callback_data: dict, state: FSMContext)
     questions = await db.select_questions(items[0])
 
     await state.set_state("test")
-    await state.update_data(lesson_id=items[1])
-    await state.update_data(questions=[q['text'] for q in questions[1:]])
-    await state.update_data(correct_answers=[q['answer'] for q in questions])
+    await state.update_data(
+            lesson_id=items[1], 
+            questions=[q['text'] for q in questions[1:]], 
+            correct_answers=[q['answer'] for q in questions],
+            current_answers=[]
+        )
 
     question = questions[0]['text']
 
@@ -29,13 +32,12 @@ async def send_test(call: CallbackQuery, callback_data: dict, state: FSMContext)
 @dp.callback_query_handler(lesson_callback.filter(action="send_answer"), state='test')
 async def update_test(call: CallbackQuery, callback_data: dict, state: FSMContext):
     data = await state.get_data()
-    
+
     current_answers = data.get('current_answers')
-    if not current_answers:
-        current_answers = []
+    current_answers.append(callback_data['item_id'])
 
     await state.update_data(
-            current_answers=current_answers.append(callback_data['item_id'])
+            current_answers=current_answers
             )
 
     lesson_id = data.get('lesson_id')
@@ -49,13 +51,21 @@ async def update_test(call: CallbackQuery, callback_data: dict, state: FSMContex
         await call.message.edit_text(question, reply_markup=keyboard)
 
     else:
-        await state.finish()
+        data = await state.get_data()
+
+        current_answers = data.get("current_answers")
+        correct_answers = data.get("correct_answers")
+        
+        pairs = [i==j for i, j in zip(current_answers, correct_answers)]
+        result = f'{pairs.count(True)} of {len(pairs)}'
 
         keyboard = await get_lesson_keyboard(lesson_id)
-        await call.message.edit_text("done", reply_markup=keyboard)
+        await call.message.edit_text(result, reply_markup=keyboard)
+
+        await state.finish()
 
 
-@dp.callback_query_handler(lesson_callback.filter(action="get_lesson"), state='test')
+@dp.callback_query_handler(lesson_callback.filter(action="back_to_lesson"), state='test')
 async def send_lesson(call: CallbackQuery, callback_data: dict):
     await state.finish()
 
