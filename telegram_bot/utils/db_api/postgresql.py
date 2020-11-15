@@ -26,9 +26,13 @@ class Database:
 
     async def select_lesson(self, lesson_id):
         sql = """ SELECT * FROM core_lesson WHERE id=$1 """
-        return await self.pool.fetch(sql, lesson_id)
+        return (await self.pool.fetch(sql, lesson_id))[0]
 
     async def select_task(self, task_id):
         sql = """ SELECT * FROM core_task WHERE id=$1 """
-        return await self.pool.fetch(sql, task_id)
-        
+        return (await self.pool.fetch(sql, task_id))[0]
+
+    async def select_questions(self, test_id):
+        sql = """ SELECT question.* FROM core_test_questions AS test, core_question AS question WHERE test_id=$1 AND question.id=test.question_id """
+        return await self.pool.fetch(sql, test_id)
+            

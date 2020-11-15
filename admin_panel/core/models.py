@@ -21,7 +21,7 @@ class Task(models.Model):
 
 class Test(models.Model):
 	name = models.CharField(max_length=256)
-	questions = models.ManyToManyField('Question', blank=True, default=None)
+	questions = models.ManyToManyField('Question')
 
 	def __str__(self):
 		return self.name

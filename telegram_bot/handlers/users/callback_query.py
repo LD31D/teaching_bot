@@ -8,14 +8,11 @@ from keyboards.inline.lesson_keyboards import *
 
 @dp.callback_query_handler(lesson_callback.filter(action="get_lesson"))
 async def send_lesson(call: CallbackQuery, callback_data: dict):
-    lesson = (await db.select_lesson(
-        int(
-            callback_data['item_id']
-            )
-        ))[0]
+    lesson_id = int(callback_data['item_id'])
+    lesson = await db.select_lesson(lesson_id)
 
-    if 'task_id' in lesson.keys() and lesson['task_id']:
-        keyboard = await get_task_keyboard(lesson['task_id'], lesson['id'])
+    if lesson['task_id'] and lesson['test_id']:
+        keyboard = await get_under_lesson_keyboard(lesson['id'], lesson['test_id'], lesson['task_id'])
     else:
         keyboard = None
 
@@ -30,8 +27,19 @@ async def send_lesson(call: CallbackQuery, callback_data: dict):
 async def send_task(call: CallbackQuery, callback_data: dict):
     items = list(map(int, callback_data['item_id'].split('__')))
 
-    task = (await db.select_task(items[0]))[0]
+    task = await db.select_task(items[0])
 
     keyboard = await get_lesson_keyboard(items[1])
 
     await call.message.edit_text(task['description'], reply_markup=keyboard)
+
+
+@dp.callback_query_handler(lesson_callback.filter(action="get_test"))
+async def send_test(call: CallbackQuery, callback_data: dict):
+    items = list(map(int, callback_data['item_id'].split('__')))
+
+    questions = await db.select_questions(items[0])
+
+    keyboard = await get_lesson_keyboard(items[1])
+
+    await call.message.edit_text('description', reply_markup=keyboard)
