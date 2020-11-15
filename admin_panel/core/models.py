@@ -28,8 +28,13 @@ class Test(models.Model):
 
 
 class Question(models.Model):
+	ANSWERS = (
+			('a', 'A'),
+			('b', 'B'),
+			('c', 'C')
+		)
 	text = models.TextField()
-	answer = models.CharField(max_length=256)
+	answer = models.CharField(max_length=1, choices=ANSWERS, default='a')
 
 	def __str__(self):
 		return self.text
