@@ -23,7 +23,7 @@ async def get_task_keyboard(task_id, lesson_id):
 	keyboard = InlineKeyboardMarkup(inline_keyboard=[
 	    [
 	        InlineKeyboardButton(
-	        	text="Get lesson", 
+	        	text="Get task", 
 	        	callback_data=lesson_callback.new(
 	        		action="get_task",
 	        		item_id=f'{task_id}__{lesson_id}'
