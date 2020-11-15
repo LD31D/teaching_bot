@@ -54,3 +54,46 @@ async def get_under_lesson_keyboard(lesson_id, test_id, task_id):
 		])
 
 	return keyboard
+
+
+async def get_under_test_keyboard(lesson_id):
+	keyboard = InlineKeyboardMarkup(inline_keyboard=[
+		[
+			InlineKeyboardButton(
+				text='A.',
+				callback_data=lesson_callback.new(
+					action='send_answer',
+					item_id='a'
+				)
+			),
+		],
+		[
+			InlineKeyboardButton(
+				text='B.',
+				callback_data=lesson_callback.new(
+					action='send_answer',
+					item_id='b'
+				)
+			),
+		],
+		[
+			InlineKeyboardButton(
+				text='C.',
+				callback_data=lesson_callback.new(
+					action='send_answer',
+					item_id='c'
+				)
+			),
+		],
+	    [
+	        InlineKeyboardButton(
+	        	text="<<<", 
+	        	callback_data=lesson_callback.new(
+	        		action="get_lesson",
+	        		item_id=lesson_id
+	        	)
+	        ),
+	    ], 
+	])
+
+	return keyboard

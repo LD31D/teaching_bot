@@ -33,13 +33,3 @@ async def send_task(call: CallbackQuery, callback_data: dict):
 
     await call.message.edit_text(task['description'], reply_markup=keyboard)
 
-
-@dp.callback_query_handler(lesson_callback.filter(action="get_test"))
-async def send_test(call: CallbackQuery, callback_data: dict):
-    items = list(map(int, callback_data['item_id'].split('__')))
-
-    questions = await db.select_questions(items[0])
-
-    keyboard = await get_lesson_keyboard(items[1])
-
-    await call.message.edit_text('description', reply_markup=keyboard)
