@@ -8,6 +8,8 @@ from keyboards.inline.lesson_keyboards import *
 
 @dp.callback_query_handler(lesson_callback.filter(action="get_lesson"))
 async def send_lesson(call: CallbackQuery, callback_data: dict):
+    await call.answer(cache_time=0)
+    
     lesson_id = int(callback_data['item_id'])
     lesson = await db.select_lesson(lesson_id)
 
@@ -25,6 +27,8 @@ async def send_lesson(call: CallbackQuery, callback_data: dict):
 
 @dp.callback_query_handler(lesson_callback.filter(action="get_task"))
 async def send_task(call: CallbackQuery, callback_data: dict):
+    await call.answer(cache_time=0)
+
     items = list(map(int, callback_data['item_id'].split('__')))
 
     task = await db.select_task(items[0])

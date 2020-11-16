@@ -10,6 +10,8 @@ from keyboards.inline.lesson_keyboards import *
 
 @dp.callback_query_handler(lesson_callback.filter(action="get_test"))
 async def send_test(call: CallbackQuery, callback_data: dict, state: FSMContext):
+    await call.answer(cache_time=0)
+
     items = list(map(int, callback_data['item_id'].split('__')))
 
     questions = await db.select_questions(items[0])
@@ -31,6 +33,8 @@ async def send_test(call: CallbackQuery, callback_data: dict, state: FSMContext)
 
 @dp.callback_query_handler(lesson_callback.filter(action="send_answer"), state='test')
 async def update_test(call: CallbackQuery, callback_data: dict, state: FSMContext):
+    await call.answer(cache_time=0)
+
     data = await state.get_data()
 
     current_answers = data.get('current_answers')
@@ -66,7 +70,9 @@ async def update_test(call: CallbackQuery, callback_data: dict, state: FSMContex
 
 
 @dp.callback_query_handler(lesson_callback.filter(action="back_to_lesson"), state='test')
-async def send_lesson(call: CallbackQuery, callback_data: dict):
+async def send_lesson(call: CallbackQuery, callback_data: dict, state: FSMContext):
+    await call.answer(cache_time=0)
+
     await state.finish()
 
     lesson_id = int(callback_data['item_id'])
