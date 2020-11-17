@@ -10,7 +10,7 @@ from keyboards.inline.lesson_keyboards import *
 async def send_lesson(call: CallbackQuery, callback_data: dict):
     await call.answer(cache_time=0)
     
-    lesson_id = int(callback_data['item_id'])
+    lesson_id = int(callback_data['first_value'])
     lesson = await db.select_lesson(lesson_id)
 
     if lesson['task_id'] and lesson['test_id']:
@@ -29,11 +29,11 @@ async def send_lesson(call: CallbackQuery, callback_data: dict):
 async def send_task(call: CallbackQuery, callback_data: dict):
     await call.answer(cache_time=0)
 
-    items = list(map(int, callback_data['item_id'].split('__')))
+    task_id = int(callback_data['first_value'])
+    lesson_id = int(callback_data['second_value'])
 
-    task = await db.select_task(items[0])
-
-    keyboard = await get_lesson_keyboard(items[1])
+    task = await db.select_task(task_id)
+    keyboard = await get_lesson_keyboard(lesson_id)
 
     await call.message.edit_text(task['description'], reply_markup=keyboard)
 

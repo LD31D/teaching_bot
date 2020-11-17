@@ -12,13 +12,14 @@ from keyboards.inline.lesson_keyboards import *
 async def send_test(call: CallbackQuery, callback_data: dict, state: FSMContext):
     await call.answer(cache_time=0)
 
-    items = list(map(int, callback_data['item_id'].split('__')))
+    tesk_id = int(callback_data['first_value'])
+    lesson_id = int(callback_data['second_value'])
 
-    questions = await db.select_questions(items[0])
+    questions = await db.select_questions(tesk_id)
 
     await state.set_state("test")
     await state.update_data(
-            lesson_id=items[1], 
+            lesson_id=lesson_id, 
             questions=[q['text'] for q in questions[1:]], 
             correct_answers=[q['answer'] for q in questions],
             current_answers=[]
@@ -26,7 +27,7 @@ async def send_test(call: CallbackQuery, callback_data: dict, state: FSMContext)
 
     question = questions[0]['text']
 
-    keyboard = await get_under_test_keyboard(items[1])
+    keyboard = await get_under_test_keyboard(lesson_id)
 
     await call.message.edit_text(question, reply_markup=keyboard)
 
@@ -38,7 +39,7 @@ async def update_test(call: CallbackQuery, callback_data: dict, state: FSMContex
     data = await state.get_data()
 
     current_answers = data.get('current_answers')
-    current_answers.append(callback_data['item_id'])
+    current_answers.append(callback_data['first_value'])
 
     await state.update_data(
             current_answers=current_answers
@@ -75,7 +76,7 @@ async def send_lesson(call: CallbackQuery, callback_data: dict, state: FSMContex
 
     await state.finish()
 
-    lesson_id = int(callback_data['item_id'])
+    lesson_id = int(callback_data['first_value'])
     lesson = await db.select_lesson(lesson_id)
 
     if lesson['task_id'] and lesson['test_id']:

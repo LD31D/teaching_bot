@@ -10,7 +10,8 @@ async def get_lesson_keyboard(lesson_id):
 	        	text="Get lesson", 
 	        	callback_data=lesson_callback.new(
 	        		action="get_lesson",
-	        		item_id=lesson_id
+	        		first_value=lesson_id,
+	        		second_value='None'
 	        	)
 	        ),
 	    ], 
@@ -25,7 +26,8 @@ async def get_task_keyboard(task_id, lesson_id):
 	        	text="Get task", 
 	        	callback_data=lesson_callback.new(
 	        		action="get_task",
-	        		item_id=f'{task_id}__{lesson_id}'
+	        		first_value=task_id,
+	        		second_value=lesson_id
 	        	)
 	        ),
 	    ]
@@ -39,7 +41,8 @@ async def get_test_keyboard(test_id, lesson_id):
 	        	text="Get test", 
 	        	callback_data=lesson_callback.new(
 	        		action="get_test",
-	        		item_id=f'{test_id}__{lesson_id}'
+	        		first_value=test_id,
+	        		second_value=lesson_id
 	        	)
 	        ),
 	    ]
@@ -63,7 +66,8 @@ async def get_under_test_keyboard(lesson_id):
 				text='A.',
 				callback_data=lesson_callback.new(
 					action='send_answer',
-					item_id='a'
+					first_value='a',
+					second_value='None'
 				)
 			),
 		],
@@ -72,7 +76,8 @@ async def get_under_test_keyboard(lesson_id):
 				text='B.',
 				callback_data=lesson_callback.new(
 					action='send_answer',
-					item_id='b'
+					first_value='b',
+					second_value='None'
 				)
 			),
 		],
@@ -81,7 +86,8 @@ async def get_under_test_keyboard(lesson_id):
 				text='C.',
 				callback_data=lesson_callback.new(
 					action='send_answer',
-					item_id='c'
+					first_value='c',
+					second_value='None'
 				)
 			),
 		],
@@ -90,7 +96,8 @@ async def get_under_test_keyboard(lesson_id):
 	        	text="<<<", 
 	        	callback_data=lesson_callback.new(
 	        		action="back_to_lesson",
-	        		item_id=lesson_id
+	        		first_value=lesson_id,
+	        		second_value='None'
 	        	)
 	        ),
 	    ], 
