@@ -4,6 +4,7 @@ from django.db import models
 class Lesson(models.Model):
 	name = models.CharField(max_length=256)
 	text = models.TextField()
+	image = models.URLField(max_length=200, default='https://bit.ly/3lbUCZy')
 	test = models.ForeignKey('Test', on_delete=models.SET_NULL, blank=True, null=True)
 	task = models.ForeignKey('Task', on_delete=models.SET_NULL, blank=True, null=True)
 
