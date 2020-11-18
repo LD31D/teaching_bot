@@ -29,7 +29,7 @@ async def processing_lectures(lessons):
                         input_message_content=types.InputTextMessageContent(
                             message_text=lesson['name'], 
                         ),
-                        thumb_url="https://bit.ly/3lbUCZy",
+                        thumb_url=lesson['image'],
                         reply_markup=await get_lesson_keyboard(lesson['id'])
                     )
                 )
