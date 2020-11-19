@@ -29,7 +29,7 @@ async def send_test(call: CallbackQuery, callback_data: dict, state: FSMContext)
 
     keyboard = await get_under_test_keyboard(lesson_id)
 
-    await call.message.edit_text(question, reply_markup=keyboard)
+    await call.message.edit_caption(question, reply_markup=keyboard)
 
 
 @dp.callback_query_handler(lesson_callback.filter(action="send_answer"), state='test')
@@ -53,7 +53,7 @@ async def update_test(call: CallbackQuery, callback_data: dict, state: FSMContex
         question = questions[0]
 
         keyboard = await get_under_test_keyboard(lesson_id)
-        await call.message.edit_text(question, reply_markup=keyboard)
+        await call.message.edit_caption(question, reply_markup=keyboard)
 
     else:
         data = await state.get_data()
@@ -65,7 +65,7 @@ async def update_test(call: CallbackQuery, callback_data: dict, state: FSMContex
         result = f'{pairs.count(True)} of {len(pairs)}'
 
         keyboard = await get_lesson_keyboard(lesson_id)
-        await call.message.edit_text(result, reply_markup=keyboard)
+        await call.message.edit_caption(result, reply_markup=keyboard)
 
         await state.finish()
 
@@ -85,7 +85,7 @@ async def send_lesson(call: CallbackQuery, callback_data: dict, state: FSMContex
         keyboard = None
 
     if not call.message: 
-        await bot.send_message(call.from_user.id, lesson['text'], reply_markup=keyboard)
+        await bot.send_photo(call.from_user.id, lesson['image'], caption=lesson['text'], reply_markup=keyboard)
 
     else:
-        await call.message.edit_text(lesson['text'], reply_markup=keyboard)
+        await call.message.edit_caption(lesson['text'], reply_markup=keyboard)

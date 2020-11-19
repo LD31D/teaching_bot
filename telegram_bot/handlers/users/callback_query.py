@@ -19,10 +19,10 @@ async def send_lesson(call: CallbackQuery, callback_data: dict):
         keyboard = None
 
     if not call.message: 
-        await bot.send_message(call.from_user.id, lesson['text'], reply_markup=keyboard)
+        await bot.send_photo(call.from_user.id, lesson['image'],caption=lesson['text'], reply_markup=keyboard)
 
     else:
-        await call.message.edit_text(lesson['text'], reply_markup=keyboard)
+        await call.message.edit_caption(caption=lesson['text'], reply_markup=keyboard)
 
 
 @dp.callback_query_handler(lesson_callback.filter(action="get_task"))
@@ -35,5 +35,5 @@ async def send_task(call: CallbackQuery, callback_data: dict):
     task = await db.select_task(task_id)
     keyboard = await get_lesson_keyboard(lesson_id)
 
-    await call.message.edit_text(task['description'], reply_markup=keyboard)
+    await call.message.edit_caption(caption=task['description'], reply_markup=keyboard)
 
