@@ -84,8 +84,4 @@ async def send_lesson(call: CallbackQuery, callback_data: dict, state: FSMContex
     else:
         keyboard = None
 
-    if not call.message: 
-        await bot.send_photo(call.from_user.id, lesson['image'], caption=lesson['text'], reply_markup=keyboard)
-
-    else:
-        await call.message.edit_caption(lesson['text'], reply_markup=keyboard)
+    await call.message.edit_caption(lesson['text'], reply_markup=keyboard)
